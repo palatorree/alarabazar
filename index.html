@@ -1,29 +1,848 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mi Sitio</title>
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Lealtad | Alara Bazar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alaraPink: {
+                            50: '#fdf2f4',
+                            100: '#fbe8ec',
+                            200: '#f7d5dc',
+                            300: '#f1b3bf',
+                            400: '#e88295',
+                            500: '#dc5b72',
+                            600: '#c53d57',
+                            700: '#a63047',
+                            800: '#8b2b3e',
+                            900: '#752838',
+                        },
+                        alaraDark: '#1a1a1a',
+                        alaraSoft: '#faf7f5'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #faf7f5;
+            color: #2b2b2b;
+        }
+
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .loyalty-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fbe8ec 100%);
+            border: 1px solid rgba(220, 91, 114, 0.25);
+            box-shadow: 0 12px 35px -10px rgba(220, 91, 114, 0.18);
+        }
     </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Mi sitio está listo</h1>
-      <p>Este es el punto de partida de tu proyecto.</p>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-alaraPink-200 selection:text-alaraDark">
+
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-alaraPink-100 shadow-xs">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('client')">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center border border-alaraPink-300 shadow-sm overflow-hidden p-1">
+                    <img src="img/alara logo.png" alt="Alara Logo" class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.src='https://placehold.co/100x100/fbe8ec/c53d57?text=A';">
+                </div>
+                <div>
+                    <h1 class="font-playfair font-bold text-lg tracking-wide text-alaraDark leading-tight">Alara Bazar
+                    </h1>
+                    <span class="text-[11px] text-alaraPink-600 font-semibold tracking-widest uppercase">Club de
+                        Lealtad</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <button onclick="switchTab('client')" id="nav-client-btn"
+                    class="px-3.5 py-2 rounded-full text-xs font-semibold bg-alaraPink-500 text-white shadow-sm transition-all duration-200 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="hidden sm:inline">Mi Tarjeta</span>
+                </button>
+                <button onclick="switchTab('admin')" id="nav-admin-btn"
+                    class="px-3.5 py-2 rounded-full text-xs font-semibold bg-white text-alaraDark border border-gray-200 hover:bg-gray-50 transition-all duration-200 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-lock text-alaraPink-500"></i>
+                    <span class="hidden sm:inline">Admin</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8">
+
+        <!-- VISTA CLIENTE -->
+        <div id="view-client" class="space-y-6">
+            <!-- Buscador y Registro -->
+            <div
+                class="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-alaraPink-100 text-center relative overflow-hidden">
+                <div
+                    class="absolute -right-12 -bottom-12 w-48 h-48 bg-alaraPink-50 rounded-full pointer-events-none opacity-65">
+                </div>
+                <div
+                    class="absolute -left-12 -top-12 w-40 h-40 bg-alaraPink-50 rounded-full pointer-events-none opacity-65">
+                </div>
+
+                <div
+                    class="w-20 h-20 rounded-3xl bg-white mx-auto flex items-center justify-center shadow-md border border-alaraPink-200 p-2 mb-4">
+                    <img src="img/" alt="Alara Logo" class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.src='https://placehold.co/100x100/fbe8ec/c53d57?text=Alara';">
+                </div>
+
+                <span
+                    class="inline-flex items-center px-3.5 py-1.5 rounded-full bg-alaraPink-50 text-alaraPink-700 text-xs font-bold tracking-wider uppercase mb-3 border border-alaraPink-200">
+                    <i class="fa-brands fa-instagram mr-1.5 text-base"></i> Club de Beneficios
+                </span>
+                <h2 class="font-playfair text-2xl md:text-3xl font-bold text-alaraDark mb-3">Tus compras tienen
+                    recompensa</h2>
+                <p class="text-gray-600 text-sm max-w-md mx-auto mb-6">
+                    Consulta tu tarjeta digital ingresando tu usuario de Instagram. ¿Eres nueva? Regístrate en 10
+                    segundos aquí abajo.
+                </p>
+
+                <!-- Pestañas internas de Buscar / Registrarse -->
+                <div class="flex justify-center mb-6">
+                    <div class="bg-gray-100 p-1 rounded-2xl inline-flex space-x-1">
+                        <button onclick="switchClientMode('search')" id="mode-search-btn"
+                            class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-alaraDark shadow-xs transition">Consultar
+                            Tarjeta</button>
+                        <button onclick="switchClientMode('register')" id="mode-register-btn"
+                            class="px-4 py-2 rounded-xl text-xs font-bold text-gray-500 hover:text-alaraDark transition">Registrarme
+                            Gratis</button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Búsqueda -->
+                <div id="form-search-container" class="max-w-md mx-auto flex flex-col sm:flex-row gap-2.5">
+                    <div class="relative flex-grow">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400 font-bold">@</span>
+                        <input type="text" id="client-insta-input" placeholder="tu_usuario_insta"
+                            class="w-full pl-9 pr-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 focus:border-alaraPink-400 focus:bg-white focus:outline-none transition text-sm font-medium">
+                    </div>
+                    <button onclick="searchClient()"
+                        class="bg-alaraDark hover:bg-alaraPink-600 text-white font-medium px-6 py-3 rounded-2xl text-sm transition-all shadow-md flex items-center justify-center space-x-2">
+                        <span>Ver Tarjeta</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Formulario de Registro Nuevo -->
+                <div id="form-register-container"
+                    class="hidden max-w-md mx-auto space-y-3 text-left bg-alaraPink-50/50 p-5 rounded-2xl border border-alaraPink-200">
+                    <h3 class="font-playfair font-bold text-base text-alaraDark text-center mb-2">Crea tu Tarjeta
+                        Digital</h3>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Tu nombre completo</label>
+                        <input type="text" id="reg-client-name" placeholder="Ej. Mariana Pérez"
+                            class="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:border-alaraPink-400 focus:outline-none text-sm font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Tu usuario de Instagram</label>
+                        <div class="relative">
+                            <span
+                                class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 font-bold">@</span>
+                            <input type="text" id="reg-client-insta" placeholder="mariana_bazar"
+                                class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:border-alaraPink-400 focus:outline-none text-sm font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Número de WhatsApp
+                            (Opcional)</label>
+                        <input type="tel" id="reg-client-phone" placeholder="3111234567"
+                            class="w-full px-4 py-2.5 rounded-xl bg-white border border-gray-200 focus:border-alaraPink-400 focus:outline-none text-sm font-medium">
+                    </div>
+                    <button onclick="registerNewClient()"
+                        class="w-full bg-alaraPink-500 hover:bg-alaraPink-600 text-white font-semibold py-3 rounded-xl text-sm transition shadow-sm mt-2">
+                        ¡Crear mi Tarjeta y Unirme al Club!
+                    </button>
+                </div>
+            </div>
+
+            <div id="client-result-container" class="hidden space-y-6">
+                <div class="loyalty-card rounded-3xl p-6 md:p-8 relative overflow-hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-white shadow-xs border border-alaraPink-200 p-1 flex items-center justify-center">
+                                <img src="alara logo.png" alt="Logo" class="w-full h-full object-contain"
+                                    onerror="this.onerror=null; this.src='https://placehold.co/100x100/fbe8ec/c53d57?text=A';">
+                            </div>
+                            <div>
+                                <span
+                                    class="text-xs uppercase tracking-widest text-alaraPink-700 font-extrabold block mb-0.5"
+                                    id="card-client-fullname">Nombre Clienta</span>
+                                <h3 id="card-client-name" class="font-playfair text-2xl font-bold text-alaraDark">
+                                    @usuario</h3>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white/90 backdrop-blur px-4 py-2.5 rounded-2xl border border-alaraPink-200 flex items-center space-x-3 shadow-xs">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-alaraPink-100 text-alaraPink-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                            </div>
+                            <div>
+                                <span class="text-[11px] text-gray-500 font-semibold block leading-none">Total
+                                    Compras</span>
+                                <span id="card-total-purchases" class="font-bold text-alaraDark text-base">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de progreso -->
+                    <div class="mb-8">
+                        <div class="flex justify-between text-xs font-bold text-gray-600 mb-2">
+                            <span>Progreso Club Alara</span>
+                            <span id="progress-percentage">0% hacia la meta 15</span>
+                        </div>
+                        <div
+                            class="w-full bg-white h-4 rounded-full overflow-hidden p-0.5 border border-alaraPink-200 shadow-inner">
+                            <div id="progress-bar-fill"
+                                class="bg-gradient-to-r from-alaraPink-400 to-alaraPink-600 h-full rounded-full transition-all duration-700"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hitos (5, 10, 15) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="milestones-grid">
+                        <!-- Compra 5 -->
+                        <div id="milestone-5"
+                            class="bg-white/70 backdrop-blur rounded-2xl p-4.5 border border-alaraPink-200 transition-all">
+                            <div class="flex items-center justify-between mb-2">
+                                <span
+                                    class="text-xs font-bold text-alaraPink-700 bg-alaraPink-50 px-2.5 py-1 rounded-full border border-alaraPink-200">Compra
+                                    5</span>
+                                <i class="fa-solid fa-gift text-alaraPink-500"></i>
+                            </div>
+                            <h4 class="font-bold text-alaraDark text-base mb-1">10% Descuento</h4>
+                            <p id="status-5" class="text-xs text-gray-500 mb-3">Faltan compras</p>
+                            <button id="btn-claim-5" onclick="claimReward(5)" disabled
+                                class="w-full py-2.5 rounded-xl text-xs font-semibold bg-gray-200 text-gray-400 cursor-not-allowed transition">
+                                Canjear Recompensa
+                            </button>
+                        </div>
+
+                        <!-- Compra 10 -->
+                        <div id="milestone-10"
+                            class="bg-white/70 backdrop-blur rounded-2xl p-4.5 border border-alaraPink-200 transition-all">
+                            <div class="flex items-center justify-between mb-2">
+                                <span
+                                    class="text-xs font-bold text-alaraPink-700 bg-alaraPink-50 px-2.5 py-1 rounded-full border border-alaraPink-200">Compra
+                                    10</span>
+                                <i class="fa-solid fa-percent text-alaraPink-500"></i>
+                            </div>
+                            <h4 class="font-bold text-alaraDark text-base mb-1">15% Descuento</h4>
+                            <p id="status-10" class="text-xs text-gray-500 mb-3">Faltan compras</p>
+                            <button id="btn-claim-10" onclick="claimReward(10)" disabled
+                                class="w-full py-2.5 rounded-xl text-xs font-semibold bg-gray-200 text-gray-400 cursor-not-allowed transition">
+                                Canjear Recompensa
+                            </button>
+                        </div>
+
+                        <!-- Compra 15 -->
+                        <div id="milestone-15"
+                            class="bg-white/70 backdrop-blur rounded-2xl p-4.5 border border-alaraPink-200 transition-all">
+                            <div class="flex items-center justify-between mb-2">
+                                <span
+                                    class="text-xs font-bold text-alaraPink-700 bg-alaraPink-50 px-2.5 py-1 rounded-full border border-alaraPink-200">Compra
+                                    15</span>
+                                <i class="fa-solid fa-crown text-alaraPink-600"></i>
+                            </div>
+                            <h4 class="font-bold text-alaraDark text-base mb-1">20% Descuento</h4>
+                            <p id="status-15" class="text-xs text-gray-500 mb-3">Faltan compras</p>
+                            <button id="btn-claim-15" onclick="claimReward(15)" disabled
+                                class="w-full py-2.5 rounded-xl text-xs font-semibold bg-gray-200 text-gray-400 cursor-not-allowed transition">
+                                Canjear Recompensa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial de compras -->
+                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-alaraPink-100">
+                    <h3 class="font-playfair font-bold text-lg text-alaraDark mb-4 flex items-center justify-between">
+                        <span>Historial de Visitas y Compras</span>
+                        <span id="client-history-count"
+                            class="text-xs font-sans font-normal text-gray-500 bg-gray-100 px-3 py-1 rounded-full">0
+                            registros</span>
+                    </h3>
+                    <div id="client-purchases-list" class="space-y-3">
+                        <!-- Dinámico -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado inicial vacío -->
+            <div id="client-empty-state"
+                class="bg-white rounded-3xl p-10 md:p-14 text-center border border-dashed border-gray-300">
+                <div
+                    class="w-16 h-16 bg-alaraPink-50 rounded-full flex items-center justify-center mx-auto text-alaraPink-500 text-xl mb-4 border border-alaraPink-200">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <h3 class="font-playfair font-bold text-lg text-alaraDark mb-1">Ingresa tu Instagram para consultar</h3>
+                <p class="text-gray-500 text-sm max-w-sm mx-auto">
+                    Ejemplo: si tu cuenta es <strong>@marifer_bazar</strong>, escribe <code>marifer_bazar</code> arriba
+                    o regístrate por primera vez.
+                </p>
+            </div>
+        </div>
+
+        <!-- VISTA ADMIN -->
+        <div id="view-admin" class="hidden space-y-6">
+            <!-- Login Admin -->
+            <div id="admin-login-card"
+                class="max-w-md mx-auto bg-white rounded-3xl p-8 md:p-10 shadow-sm border border-alaraPink-100 text-center">
+                <div
+                    class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-alaraPink-200 p-2 flex items-center justify-center mx-auto mb-4">
+                    <img src="alara logo.png" alt="Logo" class="w-full h-full object-contain">
+                </div>
+                <h2 class="font-playfair text-2xl font-bold text-alaraDark mb-2">Panel de Administración</h2>
+                <p class="text-gray-600 text-sm mb-6">Ingresa la contraseña del bazar para registrar compras y validar
+                    beneficios.</p>
+
+                <form onsubmit="adminLogin(event)" class="space-y-4">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
+                        <input type="password" id="admin-pass-input" placeholder="Contraseña (ej. alara2026)" required
+                            class="w-full pl-10 pr-4 py-3 rounded-2xl bg-gray-50 border border-gray-200 focus:border-alaraPink-400 focus:bg-white focus:outline-none transition text-sm font-medium">
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-alaraDark hover:bg-alaraPink-600 text-white font-medium py-3 rounded-2xl text-sm transition shadow-md">
+                        Acceder al Panel
+                    </button>
+                </form>
+            </div>
+
+            <!-- Panel de Control Administrador -->
+            <div id="admin-dashboard" class="hidden space-y-6">
+                <div
+                    class="bg-white rounded-3xl p-6 shadow-sm border border-alaraPink-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-alaraPink-600 font-extrabold block">Control
+                            Interno</span>
+                        <h2 class="font-playfair text-2xl font-bold text-alaraDark">Gestión de Compras - Alara</h2>
+                    </div>
+                    <button onclick="adminLogout()"
+                        class="px-4 py-2 rounded-xl text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Formulario Registrar Compra -->
+                    <div class="md:col-span-1 bg-white rounded-3xl p-6 shadow-sm border border-alaraPink-100 space-y-4">
+                        <h3 class="font-playfair font-bold text-lg text-alaraDark flex items-center space-x-2">
+                            <i class="fa-solid fa-plus-circle text-alaraPink-500"></i>
+                            <span>Registrar Compra</span>
+                        </h3>
+                        <p class="text-xs text-gray-500">Anota una nueva compra al usuario de Instagram de tu clienta.
+                        </p>
+
+                        <form onsubmit="registerPurchase(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Instagram de la
+                                    clienta</label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-gray-400 font-bold">@</span>
+                                    <input type="text" id="reg-insta" placeholder="usuario_insta" required
+                                        class="w-full pl-8 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-alaraPink-400 focus:bg-white focus:outline-none transition text-sm font-medium">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Nota o Sucursal
+                                    (Opcional)</label>
+                                <input type="text" id="reg-note" placeholder="Ej. Bazar Galerías / Compra en línea"
+                                    class="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:border-alaraPink-400 focus:bg-white focus:outline-none transition text-sm">
+                            </div>
+                            <button type="submit"
+                                class="w-full bg-alaraPink-500 hover:bg-alaraPink-600 text-white font-semibold py-3 rounded-xl text-sm transition shadow-sm flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Registrar Compra (+1)</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Listado de Clientas -->
+                    <div class="md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-alaraPink-100 space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <h3 class="font-playfair font-bold text-lg text-alaraDark">Clientas Registradas</h3>
+                            <input type="text" id="admin-search-client" oninput="filterAdminClients()"
+                                placeholder="Buscar @usuario..."
+                                class="px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs focus:outline-none focus:border-alaraPink-400 font-medium">
+                        </div>
+
+                        <div class="overflow-x-auto max-h-96 overflow-y-auto pr-1">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="border-b border-gray-100 text-xs uppercase tracking-wider text-gray-400 font-bold">
+                                        <th class="py-3 px-2">Instagram / Nombre</th>
+                                        <th class="py-3 px-2 text-center">Compras</th>
+                                        <th class="py-3 px-2">Descuentos</th>
+                                        <th class="py-3 px-2 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-clients-tbody" class="divide-y divide-gray-50 text-sm">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal personalizado -->
+    <div id="custom-modal"
+        class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-xl transform transition-all scale-95 opacity-0"
+            id="modal-content">
+            <div id="modal-icon"
+                class="w-14 h-14 bg-alaraPink-50 text-alaraPink-600 rounded-full flex items-center justify-center mx-auto text-xl mb-4 border border-alaraPink-200">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <h3 id="modal-title" class="font-playfair font-bold text-xl text-alaraDark mb-2">Aviso</h3>
+            <p id="modal-message" class="text-gray-600 text-sm mb-6">Mensaje del sistema...</p>
+            <button onclick="closeModal()"
+                class="w-full bg-alaraDark hover:bg-alaraPink-600 text-white font-medium py-3 rounded-2xl text-sm transition">
+                Entendido
+            </button>
+        </div>
     </div>
-  </body>
+
+    <footer class="bg-white border-t border-alaraPink-100 py-6 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-4xl mx-auto px-4 space-y-1.5">
+            <p class="font-playfair font-bold text-alaraDark text-sm">Alara Bazar • Club de Lealtad Digital</p>
+            <p>Diseñado para consentir a tus clientas favoritas de forma rápida y online.</p>
+        </div>
+    </footer>
+
+    <script>
+        function initStorage() {
+            if (!localStorage.getItem('alara_clients')) {
+                const sampleData = {
+                    "marifer_bazar": {
+                        instagram: "marifer_bazar",
+                        fullname: "María Fernanda",
+                        phone: "3111234567",
+                        purchases: [
+                            { date: "2026-05-01 14:30", note: "Bazar primavera" },
+                            { date: "2026-05-10 16:15", note: "Entregas centro" },
+                            { date: "2026-06-02 11:00", note: "Compra online" },
+                            { date: "2026-06-18 13:45", note: "Bazar aniversario" },
+                            { date: "2026-06-25 15:20", note: "Venta especial" }
+                        ],
+                        claimed: { 5: false, 10: false, 15: false }
+                    },
+                    "sofia_style": {
+                        instagram: "sofia_style",
+                        fullname: "Sofía Gómez",
+                        phone: "3119876543",
+                        purchases: [
+                            { date: "2026-06-01 12:00", note: "Primera compra" },
+                            { date: "2026-06-15 14:10", note: "Segunda compra" }
+                        ],
+                        claimed: { 5: false, 10: false, 15: false }
+                    }
+                };
+                localStorage.setItem('alara_clients', JSON.stringify(sampleData));
+            }
+        }
+
+        function getClients() {
+            return JSON.parse(localStorage.getItem('alara_clients')) || {};
+        }
+
+        function saveClients(clients) {
+            localStorage.setItem('alara_clients', JSON.stringify(clients));
+        }
+
+        function switchTab(tab) {
+            const clientView = document.getElementById('view-client');
+            const adminView = document.getElementById('view-admin');
+            const clientBtn = document.getElementById('nav-client-btn');
+            const adminBtn = document.getElementById('nav-admin-btn');
+
+            if (tab === 'client') {
+                clientView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                clientBtn.className = "px-3.5 py-2 rounded-full text-xs font-semibold bg-alaraPink-500 text-white shadow-sm transition-all duration-200 flex items-center space-x-1.5";
+                adminBtn.className = "px-3.5 py-2 rounded-full text-xs font-semibold bg-white text-alaraDark border border-gray-200 hover:bg-gray-50 transition-all duration-200 flex items-center space-x-1.5";
+            } else {
+                clientView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                adminBtn.className = "px-3.5 py-2 rounded-full text-xs font-semibold bg-alaraPink-500 text-white shadow-sm transition-all duration-200 flex items-center space-x-1.5";
+                clientBtn.className = "px-3.5 py-2 rounded-full text-xs font-semibold bg-white text-alaraDark border border-gray-200 hover:bg-gray-50 transition-all duration-200 flex items-center space-x-1.5";
+
+                if (sessionStorage.getItem('alara_admin_auth') === 'true') {
+                    document.getElementById('admin-login-card').classList.add('hidden');
+                    document.getElementById('admin-dashboard').classList.remove('hidden');
+                    loadAdminClientsList();
+                } else {
+                    document.getElementById('admin-login-card').classList.remove('hidden');
+                    document.getElementById('admin-dashboard').classList.add('hidden');
+                }
+            }
+        }
+
+        function switchClientMode(mode) {
+            const searchBtn = document.getElementById('mode-search-btn');
+            const registerBtn = document.getElementById('mode-register-btn');
+            const searchContainer = document.getElementById('form-search-container');
+            const registerContainer = document.getElementById('form-register-container');
+
+            if (mode === 'search') {
+                searchBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-alaraDark shadow-xs transition";
+                registerBtn.className = "px-4 py-2 rounded-xl text-xs font-bold text-gray-500 hover:text-alaraDark transition";
+                searchContainer.classList.remove('hidden');
+                registerContainer.classList.add('hidden');
+            } else {
+                registerBtn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-alaraDark shadow-xs transition";
+                searchBtn.className = "px-4 py-2 rounded-xl text-xs font-bold text-gray-500 hover:text-alaraDark transition";
+                registerContainer.classList.remove('hidden');
+                searchContainer.classList.add('hidden');
+            }
+        }
+
+        function registerNewClient() {
+            let name = document.getElementById('reg-client-name').value.trim();
+            let insta = document.getElementById('reg-client-insta').value.trim().toLowerCase();
+            let phone = document.getElementById('reg-client-phone').value.trim();
+
+            if (insta.startsWith('@')) insta = insta.substring(1);
+
+            if (!name || !insta) {
+                showModal("Faltan datos", "Por favor ingresa al menos tu nombre y tu usuario de Instagram.", "fa-triangle-exclamation");
+                return;
+            }
+
+            const clients = getClients();
+
+            if (clients[insta]) {
+                showModal("Cuenta Existente", `El usuario @${insta} ya cuenta con una tarjeta digital registrada. ¡Solo búscala para ver tu progreso!`, "fa-circle-info");
+                switchClientMode('search');
+                document.getElementById('client-insta-input').value = insta;
+                return;
+            }
+
+            // Registrar nueva clienta con su primera visita de bienvenida
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10) + ' ' + now.toTimeString().slice(0, 5);
+
+            clients[insta] = {
+                instagram: insta,
+                fullname: name,
+                phone: phone || "No proporcionado",
+                purchases: [
+                    { date: dateStr, note: "¡Bienvenida al Club Alara!" }
+                ],
+                claimed: { 5: false, 10: false, 15: false }
+            };
+
+            saveClients(clients);
+
+            showModal("¡Bienvenida al Club! 🎉", `Tu tarjeta digital ha sido creada con éxito para @${insta}. Ya tienes registrada tu visita de bienvenida.`, "fa-gift");
+
+            // Limpiar formulario y cargar tarjeta
+            document.getElementById('reg-client-name').value = '';
+            document.getElementById('reg-client-insta').value = '';
+            document.getElementById('reg-client-phone').value = '';
+
+            switchClientMode('search');
+            document.getElementById('client-insta-input').value = insta;
+            searchClient(insta);
+        }
+
+        function searchClient(queryInstagram = null) {
+            let instaInput = queryInstagram || document.getElementById('client-insta-input').value.trim().toLowerCase();
+            if (instaInput.startsWith('@')) {
+                instaInput = instaInput.substring(1);
+            }
+
+            if (!instaInput) {
+                showModal("Atención", "Por favor ingresa un usuario de Instagram válido.", "fa-triangle-exclamation");
+                return;
+            }
+
+            const clients = getClients();
+            const client = clients[instaInput];
+
+            const resultContainer = document.getElementById('client-result-container');
+            const emptyState = document.getElementById('client-empty-state');
+
+            if (!client) {
+                showModal("Usuario no encontrado", "No encontramos registros para @" + instaInput + ". ¡Regístrate gratis en la pestaña 'Registrarme Gratis'!", "fa-circle-question");
+                resultContainer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+
+            document.getElementById('card-client-name').innerText = "@" + client.instagram;
+            document.getElementById('card-client-fullname').innerText = client.fullname || "Clienta Alara";
+
+            const totalPurchases = client.purchases.length;
+            document.getElementById('card-total-purchases').innerText = totalPurchases;
+
+            let progressPct = Math.min(Math.round((totalPurchases / 15) * 100), 100);
+            document.getElementById('progress-bar-fill').style.width = progressPct + '%';
+            document.getElementById('progress-percentage').innerText = progressPct + '% hacia la meta 15';
+
+            updateMilestoneUI(5, totalPurchases, client.claimed[5]);
+            updateMilestoneUI(10, totalPurchases, client.claimed[10]);
+            updateMilestoneUI(15, totalPurchases, client.claimed[15]);
+
+            const historyList = document.getElementById('client-purchases-list');
+            document.getElementById('client-history-count').innerText = totalPurchases + (totalPurchases === 1 ? " registro" : " registros");
+
+            if (totalPurchases === 0) {
+                historyList.innerHTML = `<p class="text-xs text-gray-400 text-center py-4">Aún no hay compras registradas.</p>`;
+            } else {
+                historyList.innerHTML = client.purchases.slice().reverse().map((p, idx) => `
+                    <div class="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50 border border-gray-100 text-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-xl bg-alaraPink-100 text-alaraPink-600 flex items-center justify-center font-bold text-xs">
+                                #${totalPurchases - idx}
+                            </div>
+                            <div>
+                                <p class="font-medium text-alaraDark text-xs sm:text-sm">${p.note || 'Compra en Bazar Alara'}</p>
+                                <span class="text-[11px] text-gray-400">${p.date}</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-semibold text-alaraPink-600 bg-alaraPink-50 px-2.5 py-1 rounded-full border border-alaraPink-100">Validado ✓</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateMilestoneUI(target, totalPurchases, isClaimed) {
+            const milestoneBox = document.getElementById(`milestone-${target}`);
+            const statusText = document.getElementById(`status-${target}`);
+            const btnClaim = document.getElementById(`btn-claim-${target}`);
+
+            if (isClaimed) {
+                milestoneBox.className = "bg-green-50/90 backdrop-blur rounded-2xl p-4.5 border border-green-200 transition-all";
+                statusText.innerHTML = `<span class="text-green-700 font-semibold"><i class="fa-solid fa-check-circle mr-1"></i>Recompensa Canjeada</span>`;
+                btnClaim.className = "w-full py-2.5 rounded-xl text-xs font-semibold bg-green-600 text-white shadow-sm cursor-default";
+                btnClaim.innerText = "¡Canjeado!";
+                btnClaim.disabled = true;
+            } else if (totalPurchases >= target) {
+                milestoneBox.className = "bg-alaraPink-50/90 backdrop-blur rounded-2xl p-4.5 border border-alaraPink-300 shadow-md transition-all animate-pulse";
+                statusText.innerHTML = `<span class="text-alaraPink-700 font-bold"><i class="fa-solid fa-gift mr-1"></i>¡Descuento Desbloqueado!</span>`;
+                btnClaim.className = "w-full py-2.5 rounded-xl text-xs font-semibold bg-alaraDark hover:bg-alaraPink-600 text-white shadow-md transition cursor-pointer";
+                btnClaim.innerText = "Canjear Descuento";
+                btnClaim.disabled = false;
+            } else {
+                let missing = target - totalPurchases;
+                milestoneBox.className = "bg-white/70 backdrop-blur rounded-2xl p-4.5 border border-alaraPink-200 transition-all opacity-80";
+                statusText.innerHTML = `Faltan ${missing} ${missing === 1 ? 'compra' : 'compras'}`;
+                btnClaim.className = "w-full py-2.5 rounded-xl text-xs font-semibold bg-gray-200 text-gray-400 cursor-not-allowed transition";
+                btnClaim.innerText = "Canjear Recompensa";
+                btnClaim.disabled = true;
+            }
+        }
+
+        function claimReward(target) {
+            let activeInsta = document.getElementById('card-client-name').innerText.substring(1);
+            const clients = getClients();
+
+            if (clients[activeInsta]) {
+                clients[activeInsta].claimed[target] = true;
+                saveClients(clients);
+
+                let discountName = target === 5 ? "10%" : (target === 10 ? "15%" : "20%");
+                showModal("¡Felicidades! 🎉", `Has desbloqueado tu ${discountName} de descuento para tu siguiente compra en Alara Bazar. Muestra esta pantalla en caja o por mensaje directo de Instagram para hacer válido tu beneficio.`, "fa-gift");
+
+                searchClient(activeInsta);
+                if (sessionStorage.getItem('alara_admin_auth') === 'true') {
+                    loadAdminClientsList();
+                }
+            }
+        }
+
+        function adminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-pass-input').value;
+            if (pass === "alara2026" || pass === "alara") {
+                sessionStorage.setItem('alara_admin_auth', 'true');
+                document.getElementById('admin-login-card').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                loadAdminClientsList();
+                showModal("Acceso Exitoso", "Bienvenida al panel de administración de Alara Bazar.", "fa-shield-halved");
+            } else {
+                showModal("Contraseña Incorrecta", "La clave ingresada no es válida. Intenta de nuevo.", "fa-triangle-exclamation");
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('alara_admin_auth');
+            document.getElementById('admin-login-card').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = "";
+        }
+
+        function registerPurchase(e) {
+            e.preventDefault();
+            let insta = document.getElementById('reg-insta').value.trim().toLowerCase();
+            if (insta.startsWith('@')) insta = insta.substring(1);
+            let note = document.getElementById('reg-note').value.trim() || "Compra presencial en bazar";
+
+            if (!insta) return;
+
+            const clients = getClients();
+
+            if (!clients[insta]) {
+                clients[insta] = {
+                    instagram: insta,
+                    fullname: "Clienta Nueva",
+                    phone: "No registrado",
+                    purchases: [],
+                    claimed: { 5: false, 10: false, 15: false }
+                };
+            }
+
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10) + ' ' + now.toTimeString().slice(0, 5);
+
+            clients[insta].purchases.push({
+                date: dateStr,
+                note: note
+            });
+
+            saveClients(clients);
+
+            document.getElementById('reg-insta').value = '';
+            document.getElementById('reg-note').value = '';
+
+            loadAdminClientsList();
+            showModal("¡Compra Registrada!", `Se agregó con éxito 1 compra al usuario @${insta}. Total actual: ${clients[insta].purchases.length}.`, "fa-circle-check");
+        }
+
+        function loadAdminClientsList(filter = '') {
+            const clients = getClients();
+            const tbody = document.getElementById('admin-clients-tbody');
+
+            const keys = Object.keys(clients).filter(k => k.includes(filter.toLowerCase()) || (clients[k].fullname && clients[k].fullname.toLowerCase().includes(filter.toLowerCase())));
+
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-gray-400 text-xs">No se encontraron clientas registradas.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = keys.map(k => {
+                const c = clients[k];
+                const total = c.purchases.length;
+
+                let badges = [];
+                if (total >= 5) badges.push(`<span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.claimed[5] ? 'bg-green-100 text-green-700' : 'bg-alaraPink-100 text-alaraPink-700'}">10% ${c.claimed[5] ? '✓' : ''}</span>`);
+                if (total >= 10) badges.push(`<span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.claimed[10] ? 'bg-green-100 text-green-700' : 'bg-alaraPink-100 text-alaraPink-700'}">15% ${c.claimed[10] ? '✓' : ''}</span>`);
+                if (total >= 15) badges.push(`<span class="px-2 py-0.5 rounded text-[10px] font-bold ${c.claimed[15] ? 'bg-green-100 text-green-700' : 'bg-alaraPink-100 text-alaraPink-700'}">20% ${c.claimed[15] ? '✓' : ''}</span>`);
+
+                if (badges.length === 0) badges.push(`<span class="text-xs text-gray-400">Ninguno</span>`);
+
+                return `
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="py-3 px-2">
+                            <span class="font-semibold text-alaraDark block">@${c.instagram}</span>
+                            <span class="text-[11px] text-gray-400">${c.fullname || ''}</span>
+                        </td>
+                        <td class="py-3 px-2 text-center font-bold text-alaraPink-600">${total}</td>
+                        <td class="py-3 px-2"><div class="flex flex-wrap gap-1">${badges.join('')}</div></td>
+                        <td class="py-3 px-2 text-right">
+                            <button onclick="quickViewClient('${c.instagram}')" class="px-3 py-1 bg-alaraPink-50 text-alaraPink-600 hover:bg-alaraPink-100 rounded-lg text-xs font-semibold transition mr-1 border border-alaraPink-200">
+                                Ver Tarjeta
+                            </button>
+                            <button onclick="deleteClient('${c.instagram}')" class="px-2 py-1 text-gray-400 hover:text-red-500 rounded-lg text-xs transition" title="Eliminar cliente">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterAdminClients() {
+            const query = document.getElementById('admin-search-client').value;
+            loadAdminClientsList(query);
+        }
+
+        function quickViewClient(insta) {
+            switchTab('client');
+            document.getElementById('client-insta-input').value = insta;
+            searchClient(insta);
+        }
+
+        function deleteClient(insta) {
+            if (confirm(`¿Estás segura de eliminar los registros de @${insta}?`)) {
+                const clients = getClients();
+                delete clients[insta];
+                saveClients(clients);
+                loadAdminClientsList();
+                showModal("Cliente Eliminado", `Se han borrado los registros de @${insta}.`, "fa-trash-can");
+            }
+        }
+
+        function showModal(title, message, iconClass = "fa-bell") {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            document.getElementById('modal-icon').innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 150);
+        }
+
+        window.onload = function () {
+            initStorage();
+        }
+    </script>
+
+
+</body>
+
 </html>
